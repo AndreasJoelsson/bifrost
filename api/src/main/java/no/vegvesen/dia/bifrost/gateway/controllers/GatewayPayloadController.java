@@ -53,10 +53,9 @@ public class GatewayPayloadController {
                             responseCode = "400",
                             description = "request is missing vital information")
             })
-    public ResponseEntity<Object> uploadFile(@Parameter(description = DESC_BUCKET_NAME, example = EXAMPLE_MYBUCKET) @PathVariable String target,
-                                             @RequestPart("file") MultipartFile[] files) {
+    public ResponseEntity<Object> uploadFile(@Parameter(description = DESC_BUCKET_NAME, example = EXAMPLE_MYBUCKET) @PathVariable String target) {
 
-        log.info("uploading {} file(s) into target: {}", files.length, target);
+        log.info("uploading file(s) into target: {}", target);
         //HttpStatus httpStatus = s3Service.upload(bucket, path, files);
         //return ResponseEntity.status(httpStatus).build();
         return ResponseEntity.ok().build();

@@ -3,7 +3,7 @@ server:
 
 #OpenAPI
 springdoc:
-  packages-to-scan: no.vegvesen.dia.bifrost.s3gateway.controllers
+  packages-to-scan: no.vegvesen.dia.bifrost.gateway.controllers
   paths-to-match: /**
 
 # org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException: the request was rejected because its size (56507347) exceeds the configured maximum (10485760)
