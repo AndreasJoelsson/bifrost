@@ -1,6 +1,7 @@
 package no.vegvesen.dia.bifrost.core.context;
 
 import io.minio.MinioClient;
+import no.vegvesen.dia.bifrost.core.config.Config;
 import no.vegvesen.dia.bifrost.core.feature.Feature;
 
 import java.util.function.BiConsumer;
@@ -35,6 +36,13 @@ public interface ServiceContextIF {
      *
      * @return the {@link MinioClient}
      */
-    MinioClient s3client();
+     MinioClient s3client();
+
+    /**
+     * Method to get the config that is read from environment or
+     *
+     * @return Config object that is used for the system.
+     */
+    Config getConfig();
 
 }
