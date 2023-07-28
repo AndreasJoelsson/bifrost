@@ -1,4 +1,4 @@
-package no.vegvesen.dia.bifrost.s3gateway.controllers;
+package no.vegvesen.dia.bifrost.gateway.controllers;
 
 import no.vegvesen.dia.bifrost.contract.exception.*;
 import org.springframework.http.HttpStatus;

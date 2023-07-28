@@ -1,4 +1,4 @@
-package no.vegvesen.dia.bifrost.s3gateway.context;
+package no.vegvesen.dia.bifrost.gateway.context;
 
 import io.minio.MinioClient;
 import no.vegvesen.dia.bifrost.core.context.ServiceContextIF;

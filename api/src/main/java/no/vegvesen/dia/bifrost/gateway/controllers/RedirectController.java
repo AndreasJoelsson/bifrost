@@ -1,4 +1,4 @@
-package no.vegvesen.dia.bifrost.s3gateway.controllers;
+package no.vegvesen.dia.bifrost.gateway.controllers;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;

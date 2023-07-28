@@ -1,4 +1,4 @@
-package no.vegvesen.dia.bifrost.s3gateway.config;
+package no.vegvesen.dia.bifrost.gateway.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
