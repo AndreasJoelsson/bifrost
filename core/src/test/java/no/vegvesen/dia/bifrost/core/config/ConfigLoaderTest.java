@@ -3,7 +3,10 @@ package no.vegvesen.dia.bifrost.core.config;
 import org.junit.jupiter.api.Test;
 import org.yaml.snakeyaml.constructor.ConstructorException;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
