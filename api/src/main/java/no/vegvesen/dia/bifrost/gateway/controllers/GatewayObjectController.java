@@ -37,7 +37,7 @@ public class GatewayObjectController {
     }
 
     @PostMapping(
-            value = "/{source}",
+            value = "/{target}",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(
             summary = "Upload objects",
@@ -55,6 +55,13 @@ public class GatewayObjectController {
                                              @RequestPart("file") MultipartFile[] files) {
 
         log.info("uploading {} file(s) to target: {}", files.length, target);
+        for (MultipartFile file : files) {
+            log.info("File has attributes: {}", file.getOriginalFilename());
+            log.info("File has attributes: {}", file.getSize());
+            log.info("File has attributes: {}", file.getName());
+            log.info("File has attributes: {}", file.getResource());
+            log.info("File has attributes: {}", file.getContentType());
+        }
         //HttpStatus httpStatus = s3Service.upload(bucket, path, files);
         //return ResponseEntity.status(httpStatus).build();
         return ResponseEntity.ok().build();
