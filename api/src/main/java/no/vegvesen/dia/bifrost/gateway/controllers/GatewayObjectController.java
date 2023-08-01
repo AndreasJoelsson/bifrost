@@ -25,9 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
                 url = "https://www.vegvesen.no/wiki/x/L9W6D"))
 public class GatewayObjectController {
     private static final Logger log = LoggerFactory.getLogger(GatewayObjectController.class);
-    public static final String DESC_BUCKET_NAME = "bucket name";
-    public static final String EXAMPLE_MYBUCKET = "mybucket";
-
 
     private final S3Service s3Service;
 
@@ -51,7 +48,7 @@ public class GatewayObjectController {
                             responseCode = "400",
                             description = "request is missing vital information")
             })
-    public ResponseEntity<Object> uploadFile(@Parameter(description = DESC_BUCKET_NAME, example = EXAMPLE_MYBUCKET) @PathVariable String target,
+    public ResponseEntity<Object> uploadFile(@Parameter(description = "Target for the service that should be used.", example = "vegbilder") @PathVariable String target,
                                              @RequestPart("file") MultipartFile[] files) {
 
         log.info("uploading {} file(s) to target: {}", files.length, target);
