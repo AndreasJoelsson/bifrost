@@ -1,5 +1,7 @@
 package no.vegvesen.dia.bifrost.core.services;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import io.minio.PutObjectArgs;
 import io.minio.SnowballObject;
 import io.minio.UploadSnowballObjectsArgs;
 import no.vegvesen.dia.bifrost.core.config.Config;
@@ -12,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,23 +30,20 @@ public class S3ServiceUsingMinio extends MinioClientWrapper implements S3Service
     }
 
     @Override
-    public HttpStatus upload(String bucket, String path, MultipartFile[] files) {
+    public HttpStatus upload(String bucketName, String objectName, String contentType, InputStream stream) {
         try {
-            List<SnowballObject> objects = new ArrayList<>();
-
-            for (MultipartFile mpf : files) {
-                // TODO which filename to use for single files... and if only one file, then use minioClient.putObject()?
-                objects.add(new SnowballObject(mpf.getOriginalFilename(), mpf.getInputStream(), mpf.getSize(), ZonedDateTime.now()));
-            }
-            minioClient.uploadSnowballObjects(UploadSnowballObjectsArgs.builder()
-                    .bucket(bucket)
-                    .objects(objects)
-                    .build());
+            minioClient.putObject(
+                    PutObjectArgs.builder()
+                            .bucket(bucketName)
+                            .object(objectName)
+                            .stream(stream, stream.available(), -1)
+                            .contentType(contentType)
+                            .build()
+            );
             return HttpStatus.OK;
         } catch (Exception e) {
-            log.error("upload to bucket {} failed", bucket, e);
-            return HttpStatus.BAD_REQUEST;
+            e.printStackTrace();
+            return HttpStatus.INTERNAL_SERVER_ERROR;
         }
     }
-
 }

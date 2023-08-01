@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 public class S3GatewayObjectClient implements ObjectClient {
-    private final S3Service s3Service;
+/*    private final S3Service s3Service;
 
     @Autowired
     public S3GatewayObjectClient(Config config) {
@@ -28,5 +28,5 @@ public class S3GatewayObjectClient implements ObjectClient {
 
         return S3GatewayStates.FAILED;
     }
-
+*/
 }

@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
@@ -23,45 +24,24 @@ public class S3ServiceLocalFilesystem implements S3Service {
     }
 
     @Override
-    public HttpStatus upload(String bucket, String path, MultipartFile[] files) {
-
-        for (MultipartFile mpf : files) {
-            // TODO where is the best place to use the encryption service?
-            /*
-            if (doEncryption()) {
-                InputStream inputStream = mpf.getInputStream();
-                CipherInputStream cipherInputStream = fileCipher.encryptStream(inputStream);
-                saveFile(inputStream, Path.of(bucket,path));
-            }
-            */
-
-            // TODO and how to wrap the encryption functionality??
-            /*
-            if (doEncryption()) {
-                InputStream inputStream = mpf.getInputStream();
-                FileOutputStream outputStream = new FileOutputStream(bucket + path);
-                encryptService.encrypt(inputStream, outputStream);
-                saveFile(outputStream);
-            }
-             */
-
-            HttpStatus httpStatus = saveFile(mpf, Path.of(bucket, path));
-            if (httpStatus != HttpStatus.OK) {
-                return httpStatus;
-            }
+    public HttpStatus upload(String bucketName, String objectName, String mediaType, InputStream stream) {
+        try {
+            return saveFile(stream, Path.of(bucketName), objectName);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return HttpStatus.INTERNAL_SERVER_ERROR;
         }
-        return HttpStatus.OK;
     }
 
-    private HttpStatus saveFile(MultipartFile file, Path path) {
-        log.debug("path: {}, original filename: {}, filename: {}, size: {}", path, file.getOriginalFilename(), file.getName(), file.getSize());
+    private HttpStatus saveFile(InputStream stream, Path path, String name) throws IOException {
+        log.debug("path: {}, filename: {}, size: {}", path, name, stream.available());
 
         if (Objects.equals(chooseStrategy(path), "OVERWRITE")) {
             log.info("writing only one file with given filename");
             try {
                 Files.createDirectories(path.getParent());
                 FileOutputStream fileOutputStream = new FileOutputStream(path.toFile());
-                fileOutputStream.write(file.getBytes());
+                fileOutputStream.write(stream.readAllBytes());
             } catch (IOException e) {
                 log.error("failed to save file", e);
                 return HttpStatus.INTERNAL_SERVER_ERROR;
@@ -72,8 +52,8 @@ public class S3ServiceLocalFilesystem implements S3Service {
         try {
             Path directories = Files.createDirectories(path);
 
-            FileOutputStream fileOutputStream = new FileOutputStream(directories.resolve(file.getOriginalFilename()).toFile());
-            fileOutputStream.write(file.getBytes());
+            FileOutputStream fileOutputStream = new FileOutputStream(directories.resolve(name).toFile());
+            fileOutputStream.write(stream.readAllBytes());
         } catch (IOException e) {
             log.error("failed to save file", e);
             return HttpStatus.INTERNAL_SERVER_ERROR;
@@ -100,4 +80,5 @@ public class S3ServiceLocalFilesystem implements S3Service {
         }
         return Path.of(path);
     }
+
 }

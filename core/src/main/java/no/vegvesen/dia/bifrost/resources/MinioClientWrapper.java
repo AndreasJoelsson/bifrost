@@ -14,11 +14,8 @@ public class MinioClientWrapper {
     private static final Logger log = LoggerFactory.getLogger(MinioClientWrapper.class);
     protected final MinioClient minioClient;
 
-    private final Config appConfig;
-
     @Autowired
     protected MinioClientWrapper(Config config) {
-        this.appConfig = config;
         String accessKey = config.getAccessKey();
         String secretKey = config.getSecretKey();
         String s3Url = config.getS3Url();
