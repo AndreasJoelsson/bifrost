@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/v1/object")
 @Tag(
         name = "Bifrost Gateway API",
-        description = "Operations to upload and download objects to S3 buckets",
+        description = "Operations to upload objects to S3 buckets",
         externalDocs = @ExternalDocumentation(
                 description = "documentation on internal wiki",
                 url = "https://www.vegvesen.no/wiki/x/L9W6D"))

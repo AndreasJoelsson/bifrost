@@ -2,9 +2,11 @@ package no.vegvesen.dia.bifrost.core.services;
 
 import io.minio.SnowballObject;
 import io.minio.UploadSnowballObjectsArgs;
+import no.vegvesen.dia.bifrost.core.config.Config;
 import no.vegvesen.dia.bifrost.resources.MinioClientWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -19,7 +21,9 @@ import java.util.List;
 public class S3ServiceUsingMinio extends MinioClientWrapper implements S3Service {
     private static final Logger log = LoggerFactory.getLogger(S3ServiceUsingMinio.class);
 
-    public S3ServiceUsingMinio() {
+    @Autowired
+    public S3ServiceUsingMinio(Config config) {
+        super(config);
     }
 
     @Override

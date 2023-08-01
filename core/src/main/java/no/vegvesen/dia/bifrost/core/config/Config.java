@@ -38,4 +38,5 @@ public class Config {
     public void setS3Url(String s3Url) {
         this.s3Url = s3Url;
     }
+
 }

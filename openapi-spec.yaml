@@ -1,94 +1,32 @@
 openapi: 3.0.0
 servers:
-  - description: S3 Vegbilder Gateway API
-    url: https://s3vegbilder.atlas.vegvesen.no/
+  - description: Bifrost Gateway API
+    url: https://bifrost.saga.no/api/v1
 info:
-  description: API for s3 interaksjon. Verifiserer signaturer på urler.
+  description: API for batch push til rådatalager.
   version: "1.0.0"
-  title: S3 Gateway API
+  title: Bifrost Gateway API
   contact:
     email: andreas.joelsson@vegvesen.no
   license:
-    name: Apache 2.0
-    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+    name: MIT No Attribution
+    url: 'https://github.com/aws/mit-0'
 tags:
-  - name: s3gateway
-    description: Secured access to object storage.
+  - name: bifrost
+    description: Batch push of files or payloads to store in raw storage for data platform.
   - name: info
     description: Offentlig tilgjengelig
 paths:
-  '/api/v1/ticket/{bucket}/{path}':
-    get:
-      tags:
-        - bilde
-      summary: Laste ned bilde som binær.
-      description: |
-        Last ned gitt object fra s3 bucket
-      parameters:
-        - $ref: '#/components/parameters/Bucket'
-        - $ref: '#/components/parameters/Path'
-        - $ref: '#/components/parameters/SignatureProcess'
-        - $ref: '#/components/parameters/SignatureEnd'
-        - $ref: '#/components/parameters/Signature'
-        - $ref: '#/components/parameters/SignatureTime'
-        - $ref: '#/components/parameters/SignatureVerification'
-      responses:
-        '200':
-          description: OK
-          content:
-            image/jpeg:
-              schema:
-                type: string
-                format: binary
-            image/png:
-              schema:
-                type: string
-                format: binary
-            image/webp:
-              schema:
-                type: string
-                format: binary
-            application/octet-stream:
-              schema:
-                type: string
-                format: binary
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalError'
+  '/object/{target}':
     post:
       tags:
-        - bilde
-      summary: Laste opp bilde til s3 bucket.
+        - multipartformupload
+      summary: Laste opp filer til api.
       description: |
-        Last opp object til gitt
-      parameters:
-        - $ref: '#/components/parameters/Bucket'
-        - $ref: '#/components/parameters/Path'
-        - $ref: '#/components/parameters/SignatureProcess'
-        - $ref: '#/components/parameters/SignatureEnd'
-        - $ref: '#/components/parameters/Signature'
-        - $ref: '#/components/parameters/SignatureTime'
-        - $ref: '#/components/parameters/SignatureVerification'
+        Last opp 1 til flere object til gitt target
       requestBody:
         content:
-          image/jpeg:
-            schema:
-              type: string
-              format: binary
-          image/png:
-            schema:
-              type: string
-              format: binary
-          image/webp:
-            schema:
-              type: string
-              format: binary
-          application/octet-stream:
+          multipart/form-data:
             schema:
               type: string
               format: binary
@@ -103,110 +41,24 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalError'
-    delete:
-      tags:
-        - bilde
-      summary: Slette bilde fra s3 bucket.
-      description: |
-        Slette gitt object fra s3 bucket.
-      parameters:
-        - $ref: '#/components/parameters/Bucket'
-        - $ref: '#/components/parameters/Path'
-        - $ref: '#/components/parameters/SignatureProcess'
-        - $ref: '#/components/parameters/SignatureEnd'
-        - $ref: '#/components/parameters/Signature'
-        - $ref: '#/components/parameters/SignatureTime'
-        - $ref: '#/components/parameters/SignatureVerification'
-      responses:
-        '200':
-          description: OK
-          content:
-            image/jpeg:
-              schema:
-                type: string
-                format: binary
-            image/png:
-              schema:
-                type: string
-                format: binary
-            image/webp:
-              schema:
-                type: string
-                format: binary
-            application/octet-stream:
-              schema:
-                type: string
-                format: binary
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  '/api/v1/object/{bucket}/{path}':
-    get:
-      tags:
-        - bilde
-      summary: Laste ned bilde som binær.
-      description: |
-        Last ned gitt object fra s3 bucket
-      parameters:
-        - $ref: '#/components/parameters/Bucket'
-        - $ref: '#/components/parameters/Path'
-      responses:
-        '200':
-          description: OK
-          content:
-            image/jpeg:
-              schema:
-                type: string
-                format: binary
-            image/png:
-              schema:
-                type: string
-                format: binary
-            image/webp:
-              schema:
-                type: string
-                format: binary
-            application/octet-stream:
-              schema:
-                type: string
-                format: binary
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalError'
+  '/payload/{target}':
     post:
       tags:
-        - bilde
-      summary: Laste opp bilde til s3 bucket.
+        - json
+      summary: Laste opp filer til
       description: |
-        Last opp object til gitt
-      parameters:
-        - $ref: '#/components/parameters/Bucket'
-        - $ref: '#/components/parameters/Path'
+        Laste opp payload til target.
       requestBody:
         content:
-          image/jpeg:
+          application/json:
             schema:
               type: string
               format: binary
-          image/png:
+          application/xml:
             schema:
               type: string
               format: binary
-          image/webp:
-            schema:
-              type: string
-              format: binary
-          application/octet-stream:
+          application/yaml:
             schema:
               type: string
               format: binary
@@ -217,66 +69,6 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '403':
           $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalError'
-    delete:
-      tags:
-        - bilde
-      summary: Slette bilde fra s3 bucket.
-      description: |
-        Slette gitt object fra s3 bucket.
-      parameters:
-        - $ref: '#/components/parameters/Bucket'
-        - $ref: '#/components/parameters/Path'
-      responses:
-        '200':
-          description: OK
-          content:
-            image/jpeg:
-              schema:
-                type: string
-                format: binary
-            image/png:
-              schema:
-                type: string
-                format: binary
-            image/webp:
-              schema:
-                type: string
-                format: binary
-            application/octet-stream:
-              schema:
-                type: string
-                format: binary
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalError'
-  '/api/v1/info/{bucket}/{path}':
-    get:
-      tags:
-        - bilde
-      summary: Hente metadata om resursen.
-      description: |
-        Hente metadata om resursen.
-      parameters:
-        - $ref: '#/components/parameters/Bucket'
-        - $ref: '#/components/parameters/Path'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InfoObject'
-        '400':
-          $ref: '#/components/responses/BadRequest'
         '404':
           $ref: '#/components/responses/NotFound'
         '500':
@@ -358,148 +150,3 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorMessage'
-  parameters:
-    Bucket:
-      in: path
-      name: bucket
-      description: bucket name for the s3 object store, usually unique per ikt solution.
-      required: true
-      schema:
-        type: string
-        example: vegfoto-stm-2020
-    Path:
-      in: path
-      name: path
-      description: This is the generic path where we can find the resource on the s3 bucket.
-      required: true
-      schema:
-        type: string
-        format: uri
-        example: '/2020/EV00006_S31D40_m00012_f2.jpg'
-    SignatureProcess:
-      in: query
-      name: sp
-      description: |
-        # Signature Processing
-        
-        This is the processing options passed to the url. It is based on what execution is to be expected.
-        Options is currently 2 - 4 characters. The first saying how many times the URL is usable. The second saying what operation is allowed, 3rd is content type to return in the response, defaults to image/jpeg, and 4:th is type of download is preferred, the order is of importance here.
-
-        ## The first char can be:
-        
-        * m - url can be used multiple times.
-        * u - url can be use unique times. After first fetch it will not be valid any longer.
-        
-        Implementation for u is basic signature with 10.000 entries. So if it rotates or calls another pod it will pass through. Proper implementation for this is redis in memory store or hazelcast with shared set of the signature hash between the pods.
-        
-        ## The other is operation that is being executed.
-        
-        * r - read operation that transforms to get.
-        * w - write operation that transforms to put/post. Recommended to be combined with u.
-        * x - Execute operation that transform to delete. Recommended to be combined with u.
-        
-        This is mainly required so we cant use the read operation to upload a file in the future.
-        
-        ## 3:rd is what contentype to send back, defaults to image/jpeg other supported flags is:
-        
-        | Flag	| Returned Content-Type |
-        | - | - |
-        | b	| application/octet-stream |
-        | j	| image/jpeg |
-        | p	| image/png |
-        | w	| image/webp |
-        
-        ## 4:th parameter is how to deliver the download. Defaults to file or complete binary.
-        
-        | Flag | Returned Response |
-        | - | - |
-        | f	| file or blob |
-        | s	| stream |
-        | a	| aes encryption upload or download |
-      required: true
-      schema:
-        type: string
-        example: 'mrjf'
-    SignatureEnd:
-      in: query
-      name: se
-      description: |
-        # Signature End Time
-        
-        This is the last time the url will be valid. If the time has passed this we will return a 403 Forbidden
-        Exception.
-        
-        The url time should be in UTC Zulu time. and that is what we compare against.
-      required: true
-      schema:
-        type: string
-        format: date-time
-        example: '2021-01-27T07:47:41Z'
-    SignatureTime:
-      in: query
-      name: st
-      description: |
-        # Signature Time of Sign
-        
-        This is the time that the signature was signed. If this was signed in the future we will send a 403
-        forbittend Exception.
-        
-        The url time should be in UTC Zulu time. and that is what we compare against.
-      required: true
-      schema:
-        type: string
-        format: date-time
-        example: '2021-01-26T07:47:41Z'
-    SignatureVerification:
-      in: query
-      name: sv
-      description: |
-        # Signature Verification
-        
-        This is the key reference that should be used. There is no limit to the number of keys you can sign
-        an url with. The only requirement is that the gateway has knowledge of the shared secret key. This
-        is used to counter calculate the provided signature with.
-      required: true
-      schema:
-        type: string
-        example: 'vegfoto-key-001'
-    Signature:
-      in: query
-      name: sig
-      description: |
-        # Signature
-        
-        This is the calculated signature that is provided to verify that no manipulation is done to the 
-        url before sending it in.
-        We currently support sha256 signing and rsasha256 signing. Depending on the needs for the application.
-        
-        ## Calculating signature
-        Signature is calculated by joining the values for bucket, path, se, sp, st as a comma separated list. The values is ordered by key, where bucket has key b and path has key path. So the values is ordered in the following way:
-        
-        1. bucket
-        1. path
-        1. se
-        1. sp
-        1. st
-        
-        Adding a comma between (,) each. Then using the secret key specified by sv to generate hash for the values with the sha256 hashing algorithm https://en.wikipedia.org/wiki/SHA-2.
-        
-        So in the example URL.
-        
-        ```
-        http://s3vegbilder.utv.atlas.vegvesen.no/vegfoto-stm-2020ny/2020/EV00006_S31D40_m00012_f2.jpg?st=2021-01-26T07:47:41Z&se=2021-01-27T07:47:41Z&sp=mr&sv=vegfoto-1&sig=lAq1Btm3IOHalPSbZ05RVus+LBFoKOAyGhU8KrG0Yds=
-        ```
-        
-        The signing will be done on the string:
-        
-        ```
-        vegfoto-stm-2020ny,/2020/EV00006_S31D40_m00012_f2.jpg,2021-01-27T07:47:41Z,mr,2021-01-26T07:47:41Z
-        ```
-        
-        With the shared secret that has key: `vegfoto-1`
-        
-        `vegfoto-1` can for example have the value secret and should only be shared between s3gateway and the signer. There is currently now no limit to the number of secret keys we can support in the gateway.
-      required: true
-      schema:
-        type: string
-        example: 'lAq1Btm3IOHalPSbZ05RVus+LBFoKOAyGhU8KrG0Yds='

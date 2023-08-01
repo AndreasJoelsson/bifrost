@@ -1,16 +1,19 @@
 package no.vegvesen.dia.bifrost.client;
 
 import no.vegvesen.dia.bifrost.contract.S3GatewayStates;
+import no.vegvesen.dia.bifrost.core.config.Config;
 import no.vegvesen.dia.bifrost.core.services.S3Service;
 import no.vegvesen.dia.bifrost.core.services.S3ServiceUsingMinio;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 public class S3GatewayObjectClient implements ObjectClient {
     private final S3Service s3Service;
 
-    public S3GatewayObjectClient() {
-        s3Service = new S3ServiceUsingMinio();
+    @Autowired
+    public S3GatewayObjectClient(Config config) {
+        s3Service = new S3ServiceUsingMinio(config);
     }
     public S3GatewayObjectClient(S3Service s3Service) {
         this.s3Service = s3Service;

@@ -37,11 +37,11 @@ public class GatewayPayloadController {
     }
 
     @PostMapping(
-            value = "/json/{target}",
-            consumes = MediaType.APPLICATION_JSON_VALUE)
+            value = "/payload/{target}",
+            consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, "application/yaml" } )
     @Operation(
-            summary = "Write json to the target path",
-            description = "Store json payload to s3.",
+            summary = "Write json/xml/yaml to the target path",
+            description = "Store payload to s3.",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -50,55 +50,9 @@ public class GatewayPayloadController {
                             responseCode = "400",
                             description = "request is missing vital information")
             })
-    public ResponseEntity<Object> payloadJson(@Parameter(description = DESC_BUCKET_NAME, example = EXAMPLE_MYBUCKET) @PathVariable String target,
-                                              @RequestBody String requestBody) {
+    public ResponseEntity<Object> payloadAny(@Parameter(description = DESC_BUCKET_NAME, example = EXAMPLE_MYBUCKET) @PathVariable String target,
+                                             @RequestBody JsonNode requestBody) {
         log.info("Upload json into target: {}", target);
-        log.info("Recived payload: {}", requestBody);
-        //HttpStatus httpStatus = s3Service.upload(bucket, path, files);
-        //return ResponseEntity.status(httpStatus).build();
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping(
-            value = "/xml/{target}",
-            consumes = MediaType.APPLICATION_XML_VALUE)
-    @Operation(
-            summary = "Write xml to the target path",
-            description = "Upload xml payload for a given source",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "xml uploaded"),
-                    @ApiResponse(
-                            responseCode = "400",
-                            description = "request is missing vital information")
-            })
-    public ResponseEntity<Object> payloadXml(@Parameter(description = DESC_BUCKET_NAME, example = EXAMPLE_MYBUCKET) @PathVariable String target,
-                                             @RequestBody JsonNode requestBody) {
-        log.info("Upload xml into target: {}", target);
-        log.info("Recived payload: {}", requestBody);
-        //HttpStatus httpStatus = s3Service.upload(bucket, path, files);
-        //return ResponseEntity.status(httpStatus).build();
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping(
-            value = "/yml/{target}",
-            consumes = "application/yaml")
-    @Operation(
-            summary = "Write yaml to the target path",
-            description = "Upload yaml payload for a given source",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "yaml uploaded"),
-                    @ApiResponse(
-                            responseCode = "400",
-                            description = "request is missing vital information")
-            })
-    public ResponseEntity<Object> payloadYml(@Parameter(description = DESC_BUCKET_NAME, example = EXAMPLE_MYBUCKET) @PathVariable String target,
-                                             @RequestBody JsonNode requestBody) {
-        log.info("Upload yaml into target: {}", target);
         log.info("Recived payload: {}", requestBody);
         //HttpStatus httpStatus = s3Service.upload(bucket, path, files);
         //return ResponseEntity.status(httpStatus).build();
