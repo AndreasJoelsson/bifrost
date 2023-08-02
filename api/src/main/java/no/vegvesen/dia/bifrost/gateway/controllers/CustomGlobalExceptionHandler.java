@@ -13,22 +13,22 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ErrorMessage> customHandleBadRequest(Exception ex, WebRequest request) {
-        return new ResponseEntity<>(((ErrorMessageGetter)ex).getErrorMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(((ErrorMessageGetter) ex).getErrorMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ForbiddenException.class)
     public ResponseEntity<ErrorMessage> customHandleForbiddenException(Exception ex, WebRequest request) {
-        return new ResponseEntity<>(((ErrorMessageGetter)ex).getErrorMessage(), HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(((ErrorMessageGetter) ex).getErrorMessage(), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(InternalServerError.class)
     public ResponseEntity<ErrorMessage> customHandleInternalServerError(Exception ex, WebRequest request) {
-        return new ResponseEntity<>(((ErrorMessageGetter)ex).getErrorMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(((ErrorMessageGetter) ex).getErrorMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorMessage> customHandleNotFoundException(Exception ex, WebRequest request) {
-        return new ResponseEntity<>(((ErrorMessageGetter)ex).getErrorMessage(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(((ErrorMessageGetter) ex).getErrorMessage(), HttpStatus.NOT_FOUND);
     }
 
 }

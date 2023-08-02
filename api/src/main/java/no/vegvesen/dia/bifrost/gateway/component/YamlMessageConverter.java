@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
 
 @Component
-public class YamlMessageConverter  extends AbstractJackson2HttpMessageConverter {
+public class YamlMessageConverter extends AbstractJackson2HttpMessageConverter {
 
     YamlMessageConverter() {
         super(new ObjectMapper(new YAMLFactory()),

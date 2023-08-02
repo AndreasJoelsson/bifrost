@@ -2,13 +2,9 @@ package no.vegvesen.dia.bifrost.resources;
 
 import io.minio.MinioClient;
 import no.vegvesen.dia.bifrost.core.config.Config;
-import no.vegvesen.dia.bifrost.core.config.ConfigLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.io.FileNotFoundException;
-import java.util.Objects;
 
 public class MinioClientWrapper {
     private static final Logger log = LoggerFactory.getLogger(MinioClientWrapper.class);

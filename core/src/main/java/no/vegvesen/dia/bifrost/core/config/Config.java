@@ -9,10 +9,6 @@ public class Config {
     @JsonProperty("s3")
     private final S3Config s3Config;
 
-    public static Config empty() {
-        return new Config();
-    }
-
     private Config() {
         this.s3Config = S3Config.empty();
     }
@@ -20,6 +16,10 @@ public class Config {
     @JsonCreator
     public Config(@JsonProperty("s3") S3Config s3) {
         this.s3Config = s3;
+    }
+
+    public static Config empty() {
+        return new Config();
     }
 
     public S3Config getS3Config() {

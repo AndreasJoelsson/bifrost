@@ -15,12 +15,12 @@ public class ErrorMessage {
     // Potential link to explain more about the error message.
     String link;
 
-    public static ErrorMessage create() {
-        return new ErrorMessage();
-    }
-
     private ErrorMessage() {
 
+    }
+
+    public static ErrorMessage create() {
+        return new ErrorMessage();
     }
 
     public int getStatus() {

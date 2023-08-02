@@ -10,8 +10,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class GatewayObjectControllerTest extends S3ServiceTestdata {
 
-    private GatewayObjectController s3GatewayController;
     private final S3ServiceLocalFilesystem s3ServiceLocalFilesystem = new S3ServiceLocalFilesystem();
+    private GatewayObjectController s3GatewayController;
 
 
     GatewayObjectControllerTest() throws IOException {

@@ -17,23 +17,6 @@ import java.io.*;
 public class ConfigLoader {
 
     /**
-     * Loads the application's configuration.
-     * The configuration is expected to be a file path specified by the environment variable "APP_CONFIG".
-     * If the configuration file cannot be found or an error occurs while reading it, an empty Config object is returned.
-     *
-     * @return the loaded configuration, or an empty Config object if the configuration file cannot be found.
-     */
-    @Bean
-    public Config appConfig() {
-        try {
-            return fromEnvironment("APP_CONFIG");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return Config.empty();
-        }
-    }
-
-    /**
      * Loads configuration from an InputStream.
      * The contents of the InputStream should be in YAML format and map to the properties of the Config class.
      *
@@ -73,6 +56,23 @@ public class ConfigLoader {
      */
     public static Config fromEnvironment(String environment) throws FileNotFoundException {
         return fromFile(new File(System.getenv(environment)));
+    }
+
+    /**
+     * Loads the application's configuration.
+     * The configuration is expected to be a file path specified by the environment variable "APP_CONFIG".
+     * If the configuration file cannot be found or an error occurs while reading it, an empty Config object is returned.
+     *
+     * @return the loaded configuration, or an empty Config object if the configuration file cannot be found.
+     */
+    @Bean
+    public Config appConfig() {
+        try {
+            return fromEnvironment("APP_CONFIG");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return Config.empty();
+        }
     }
 
 }

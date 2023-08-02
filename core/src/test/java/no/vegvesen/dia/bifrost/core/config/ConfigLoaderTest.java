@@ -1,6 +1,5 @@
 package no.vegvesen.dia.bifrost.core.config;
 
-import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;

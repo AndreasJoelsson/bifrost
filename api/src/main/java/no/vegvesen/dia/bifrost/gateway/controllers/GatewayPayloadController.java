@@ -23,12 +23,11 @@ import org.springframework.web.bind.annotation.*;
                 description = "documentation on internal wiki",
                 url = "https://www.vegvesen.no/wiki/x/L9W6D"))
 public class GatewayPayloadController {
-    private static final Logger log = LoggerFactory.getLogger(GatewayPayloadController.class);
     public static final String DESC_PATH_WITH_FILENAME = "path with filename";
     public static final String EXAMPLE_MYPATH_SUBPATH_FILENAME_JPG = "/mypath/subpath/filename.jpg";
     public static final String DESC_BUCKET_NAME = "bucket name";
     public static final String EXAMPLE_MYBUCKET = "mybucket";
-
+    private static final Logger log = LoggerFactory.getLogger(GatewayPayloadController.class);
     private final S3Service s3Service;
 
     @Autowired
@@ -38,7 +37,7 @@ public class GatewayPayloadController {
 
     @PostMapping(
             value = "/payload/{target}",
-            consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, "application/yaml" } )
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, "application/yaml"})
     @Operation(
             summary = "Write json/xml/yaml to the target path",
             description = "Store payload to s3.",
@@ -54,6 +53,7 @@ public class GatewayPayloadController {
                                              @RequestBody JsonNode requestBody) {
         log.info("Upload json into target: {}", target);
         log.info("Recived payload: {}", requestBody);
+        log.info("Instantiating the controller with: {}", s3Service.getClass().descriptorString());
         //HttpStatus httpStatus = s3Service.upload(bucket, path, files);
         //return ResponseEntity.status(httpStatus).build();
         return ResponseEntity.ok().build();

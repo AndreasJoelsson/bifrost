@@ -3,9 +3,10 @@ package no.vegvesen.dia.bifrost.core.services;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,12 +16,28 @@ import java.nio.file.Path;
 import java.util.Objects;
 
 @Service
+@Profile("dev")
 public class S3ServiceLocalFilesystem implements S3Service {
-    private static final Logger log = LoggerFactory.getLogger(S3ServiceLocalFilesystem.class);
     public static final String SIMULATED_BUCKET_NAME = "vegfoto-prod-2021";
+    private static final Logger log = LoggerFactory.getLogger(S3ServiceLocalFilesystem.class);
 
     @Autowired
     public S3ServiceLocalFilesystem() {
+    }
+
+    public static void deleteAllEmptyFolders(String folder) throws IOException {
+        String[] split = folder.split("/");
+        for (int i = split.length; i > 0; i--) {
+            Files.deleteIfExists(calcPathToDelete(split, i));
+        }
+    }
+
+    private static Path calcPathToDelete(String[] split, int numberOfSubPaths) {
+        String path = "";
+        for (int p = 0; p < numberOfSubPaths; p++) {
+            path += split[p] + "/";
+        }
+        return Path.of(path);
     }
 
     @Override
@@ -64,21 +81,6 @@ public class S3ServiceLocalFilesystem implements S3Service {
 
     private String chooseStrategy(Path path) {
         return null;
-    }
-
-    public static void deleteAllEmptyFolders(String folder) throws IOException {
-        String[] split = folder.split("/");
-        for (int i = split.length; i > 0; i--) {
-            Files.deleteIfExists(calcPathToDelete(split, i));
-        }
-    }
-
-    private static Path calcPathToDelete(String[] split, int numberOfSubPaths) {
-        String path = "";
-        for (int p = 0; p < numberOfSubPaths; p++) {
-            path += split[p] + "/";
-        }
-        return Path.of(path);
     }
 
 }

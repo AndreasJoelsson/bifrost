@@ -10,10 +10,10 @@ public class InternalServerError extends RuntimeException implements ErrorMessag
 
     public InternalServerError(Throwable exception) {
         this.errorMessage = ErrorMessage.create()
-                        .setStatus(HTTP_CODE)
-                        .setCode(getCode(exception))
-                        .setMessage("Something bad happened. Please try again !!")
-                        .setDeveloperMessage(exception.getMessage());
+                .setStatus(HTTP_CODE)
+                .setCode(getCode(exception))
+                .setMessage("Something bad happened. Please try again !!")
+                .setDeveloperMessage(exception.getMessage());
     }
 
     public InternalServerError(String message) {

@@ -9,10 +9,6 @@ public class S3Config {
     private final String secretKey;
     private final String url;
 
-    public static S3Config empty() {
-        return new S3Config();
-    }
-
     private S3Config() {
         this.accessKey = null;
         this.secretKey = null;
@@ -27,6 +23,10 @@ public class S3Config {
         this.accessKey = accessKey;
         this.secretKey = secretKey;
         this.url = url;
+    }
+
+    public static S3Config empty() {
+        return new S3Config();
     }
 
     public String getAccessKey() {

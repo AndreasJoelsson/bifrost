@@ -25,7 +25,7 @@ public interface S3Service {
      *
      * @param bucketName the name of the S3 bucket
      * @param objectName the name of the object in the bucket
-     * @param node the JSON node to be uploaded
+     * @param node       the JSON node to be uploaded
      * @return the status of the upload operation
      */
     default HttpStatus upload(String bucketName, String objectName, JsonNode node) {
@@ -44,7 +44,7 @@ public interface S3Service {
      * Uploads multiple files to the specified S3 bucket.
      *
      * @param bucketname the name of the S3 bucket
-     * @param files array of files to be uploaded
+     * @param files      array of files to be uploaded
      * @return the status of the upload operation. Returns the status code of the most severe response if there are multiple files.
      */
     default HttpStatus upload(String bucketname, MultipartFile[] files) {
@@ -56,7 +56,7 @@ public interface S3Service {
      * Uploads a single file to the specified S3 bucket.
      *
      * @param bucketname the name of the S3 bucket
-     * @param file the file to be uploaded
+     * @param file       the file to be uploaded
      * @return the status of the upload operation
      */
     default HttpStatus upload(String bucketname, MultipartFile file) {
@@ -73,8 +73,8 @@ public interface S3Service {
      *
      * @param bucketName the name of the S3 bucket
      * @param objectName the name of the object in the bucket
-     * @param mediaType the media type of the data
-     * @param stream the input stream from which the data is read
+     * @param mediaType  the media type of the data
+     * @param stream     the input stream from which the data is read
      * @return the status of the upload operation
      */
     HttpStatus upload(String bucketName, String objectName, String mediaType, InputStream stream);
