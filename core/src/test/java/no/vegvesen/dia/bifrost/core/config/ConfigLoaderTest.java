@@ -1,5 +1,7 @@
 package no.vegvesen.dia.bifrost.core.config;
 
+import no.vegvesen.dia.bifrost.core.target.ActionType;
+import no.vegvesen.dia.bifrost.core.target.TargetConfig;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -20,6 +22,11 @@ class ConfigLoaderTest {
         assertEquals("ABCD1234", config.getS3Config().getAccessKey());
         assertEquals("1234ABCD", config.getS3Config().getSecretKey());
         assertEquals("www.google.se", config.getS3Config().getUrl());
+        assertEquals(2, config.getTargetConfigs().size());
+        TargetConfig check = config.getTargetConfigs().get(0);
+        assertEquals(ActionType.S3, check.getAction());
+        assertEquals("bucket-push-test", check.getName());
+        assertEquals("test-1", check.getTarget());
     }
 
     @Test
