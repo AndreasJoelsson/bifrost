@@ -1,3 +1,4 @@
-accessKey: "00f533a8075ef6e791e8"
-secretKey: "IAHXftiqrvEfUQsHleF+g6m3o5ZvVgb/gQ1FnJcH"
-s3Url: "https://s3-oslo.ostore.vegvesen.no"
+s3:
+  accessKey: "00f533a8075ef6e791e8"
+  secretKey: "IAHXftiqrvEfUQsHleF+g6m3o5ZvVgb/gQ1FnJcH"
+  url: "https://s3-oslo.ostore.vegvesen.no"

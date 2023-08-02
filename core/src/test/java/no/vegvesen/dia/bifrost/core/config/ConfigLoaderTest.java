@@ -1,7 +1,7 @@
 package no.vegvesen.dia.bifrost.core.config;
 
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import org.junit.jupiter.api.Test;
-import org.yaml.snakeyaml.constructor.ConstructorException;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -18,20 +18,20 @@ class ConfigLoaderTest {
         ClassLoader loader = getClass().getClassLoader();
         File input = new File(loader.getResource("test_config.yml").getFile());
         Config config = ConfigLoader.fromFile(input);
-        assertEquals("ABCD1234", config.getAccessKey());
-        assertEquals("1234ABCD", config.getSecretKey());
-        assertEquals("www.google.se", config.getS3Url());
+        assertEquals("ABCD1234", config.getS3Config().getAccessKey());
+        assertEquals("1234ABCD", config.getS3Config().getSecretKey());
+        assertEquals("www.google.se", config.getS3Config().getUrl());
     }
 
     @Test
     void fromStream() {
-        String yamlData = "accessKey: XYZ123\nsecretKey: 9876ZYX\ns3Url: www.example.com";
+        String yamlData = "s3:\n  accessKey: XYZ123\n  secretKey: 9876ZYX\n  url: www.example.com";
         InputStream inputStream = new ByteArrayInputStream(yamlData.getBytes());
 
         Config config = ConfigLoader.fromStream(inputStream);
-        assertEquals("XYZ123", config.getAccessKey());
-        assertEquals("9876ZYX", config.getSecretKey());
-        assertEquals("www.example.com", config.getS3Url());
+        assertEquals("XYZ123", config.getS3Config().getAccessKey());
+        assertEquals("9876ZYX", config.getS3Config().getSecretKey());
+        assertEquals("www.example.com", config.getS3Config().getUrl());
     }
 
     @Test
@@ -42,7 +42,11 @@ class ConfigLoaderTest {
     @Test
     void fromFile_InvalidYamlData() throws FileNotFoundException {
         File input = new File(Objects.requireNonNull(getClass().getClassLoader().getResource("invalid_config.yml")).getFile());
-        assertThrows(ConstructorException.class, () -> ConfigLoader.fromFile(input));
+        Config config = ConfigLoader.fromFile(input);
+
+        assertNull(config.getS3Config().getAccessKey());
+        assertNull(config.getS3Config().getSecretKey());
+        assertNull(config.getS3Config().getUrl());
     }
 
     @Test
@@ -51,17 +55,17 @@ class ConfigLoaderTest {
         InputStream inputStream = new ByteArrayInputStream(yamlData.getBytes());
 
         Config config = ConfigLoader.fromStream(inputStream);
-        assertNull(config.getAccessKey());
-        assertNull(config.getSecretKey());
-        assertNull(config.getS3Url());
+        assertNull(config.getS3Config().getAccessKey());
+        assertNull(config.getS3Config().getSecretKey());
+        assertNull(config.getS3Config().getUrl());
     }
 
     @Test
     void fromStream_DefaultConstructor() {
         Config config = ConfigLoader.fromStream(new ByteArrayInputStream(new byte[0]));
-        assertNull(config.getAccessKey());
-        assertNull(config.getSecretKey());
-        assertNull(config.getS3Url());
+        assertNull(config.getS3Config().getAccessKey());
+        assertNull(config.getS3Config().getSecretKey());
+        assertNull(config.getS3Config().getUrl());
     }
 
 }

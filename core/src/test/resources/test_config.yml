@@ -1,3 +1,4 @@
-accessKey: "ABCD1234"
-secretKey: "1234ABCD"
-s3Url: "www.google.se"
+s3:
+  accessKey: "ABCD1234"
+  secretKey: "1234ABCD"
+  url: "www.google.se"

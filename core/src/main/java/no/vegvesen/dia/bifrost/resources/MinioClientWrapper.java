@@ -16,9 +16,9 @@ public class MinioClientWrapper {
 
     @Autowired
     protected MinioClientWrapper(Config config) {
-        String accessKey = config.getAccessKey();
-        String secretKey = config.getSecretKey();
-        String s3Url = config.getS3Url();
+        String accessKey = config.getS3Config().getAccessKey();
+        String secretKey = config.getS3Config().getSecretKey();
+        String s3Url = config.getS3Config().getUrl();
 
         log.debug("do we have data?:" + accessKey.charAt(0) + secretKey.charAt(1));
         minioClient = new MinioClient.Builder()

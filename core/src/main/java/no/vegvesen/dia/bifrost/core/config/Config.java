@@ -1,42 +1,29 @@
 package no.vegvesen.dia.bifrost.core.config;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import no.vegvesen.dia.bifrost.core.services.S3Config;
 
 public class Config {
-    @JsonProperty("accessKey")
-    private String accessKey;
 
-    @JsonProperty("secretKey")
-    private String secretKey;
-    @JsonProperty("s3Url")
-    private String s3Url;
+    @JsonProperty("s3")
+    private final S3Config s3Config;
 
     public static Config empty() {
         return new Config();
     }
 
-    public String getAccessKey() {
-        return accessKey;
+    private Config() {
+        this.s3Config = S3Config.empty();
     }
 
-    public void setAccessKey(String accessKey) {
-        this.accessKey = accessKey;
+    @JsonCreator
+    public Config(@JsonProperty("s3") S3Config s3) {
+        this.s3Config = s3;
     }
 
-    public String getSecretKey() {
-        return secretKey;
-    }
-
-    public void setSecretKey(String secretKey) {
-        this.secretKey = secretKey;
-    }
-
-    public String getS3Url() {
-        return s3Url;
-    }
-
-    public void setS3Url(String s3Url) {
-        this.s3Url = s3Url;
+    public S3Config getS3Config() {
+        return this.s3Config;
     }
 
 }

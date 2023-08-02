@@ -10,7 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 import java.util.Arrays;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"no.vegvesen.dia.bifrost.gateway.*", "no.vegvesen.dia.bifrost.core.services", "no.vegvesen.dia.bifrost.core.cryptography"})
+@ComponentScan(basePackages = {"no.vegvesen.dia.bifrost.gateway.*", "no.vegvesen.dia.bifrost.core.services", "no.vegvesen.dia.bifrost.core.config"})
 public class BifrostGatewayApplication {
 
 	public static void main(String[] args) {
