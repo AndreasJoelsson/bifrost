@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Service;
 import java.io.InputStream;
 
 @Service
-@Profile("prod")
+@ConditionalOnProperty(name = "s3.service.type", havingValue = "minio", matchIfMissing = true)
 public class S3ServiceUsingMinio extends MinioClientWrapper implements S3Service {
     private static final Logger log = LoggerFactory.getLogger(S3ServiceUsingMinio.class);
 
