@@ -11,7 +11,6 @@ public class S3Config {
     private final String url;
     private final S3ImplementationType implementation;
 
-
     private S3Config() {
         this.accessKey = null;
         this.secretKey = null;

@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import no.vegvesen.dia.bifrost.core.Context;
 import no.vegvesen.dia.bifrost.core.services.DataPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -28,11 +31,11 @@ public class GatewayPayloadController {
     public static final String DESC_BUCKET_NAME = "bucket name";
     public static final String EXAMPLE_MYBUCKET = "mybucket";
     private static final Logger log = LoggerFactory.getLogger(GatewayPayloadController.class);
-    private final DataPublisher dataPublisher;
+    private final Context context;
 
     @Autowired
-    public GatewayPayloadController(DataPublisher dataPublisher) {
-        this.dataPublisher = dataPublisher;
+    public GatewayPayloadController(Context context) {
+        this.context = context;
     }
 
     @PostMapping(
@@ -53,7 +56,7 @@ public class GatewayPayloadController {
                                              @RequestBody JsonNode requestBody) {
         log.info("Upload json into target: {}", target);
         log.info("Recived payload: {}", requestBody);
-        log.info("Instantiating the controller with: {}", dataPublisher.getClass().descriptorString());
+        log.info("Publishin item returns: {}", context.publish(target, UUID.randomUUID().toString(), requestBody));
 
         //HttpStatus httpStatus = s3Service.upload(bucket, path, files);
         //return ResponseEntity.status(httpStatus).build();

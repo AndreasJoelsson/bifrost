@@ -6,7 +6,6 @@ import no.vegvesen.dia.bifrost.core.services.DataPublisher;
 import no.vegvesen.dia.bifrost.core.services.S3Config;
 import no.vegvesen.dia.bifrost.core.services.S3ServiceLocalFilesystem;
 import no.vegvesen.dia.bifrost.core.services.S3ServiceUsingMinio;
-import no.vegvesen.dia.bifrost.core.target.ActionType;
 import no.vegvesen.dia.bifrost.core.target.TargetConfig;
 import no.vegvesen.dia.bifrost.core.target.TargetFactory;
 import org.springframework.beans.factory.annotation.Autowired;
