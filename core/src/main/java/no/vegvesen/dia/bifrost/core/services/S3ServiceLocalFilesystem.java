@@ -3,9 +3,7 @@ package no.vegvesen.dia.bifrost.core.services;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +16,7 @@ import java.util.Objects;
 
 @Service
 @ConditionalOnProperty(name = "s3.service.type", havingValue = "local")
-public class S3ServiceLocalFilesystem implements S3Service {
+public class S3ServiceLocalFilesystem implements DataPublisher {
     public static final String SIMULATED_BUCKET_NAME = "vegfoto-prod-2021";
     private static final Logger log = LoggerFactory.getLogger(S3ServiceLocalFilesystem.class);
 
@@ -42,9 +40,9 @@ public class S3ServiceLocalFilesystem implements S3Service {
     }
 
     @Override
-    public HttpStatus upload(String bucketName, String objectName, String mediaType, InputStream stream) {
+    public HttpStatus publish(String destination, String objectName, String mediaType, InputStream stream) {
         try {
-            return saveFile(stream, Path.of(bucketName), objectName);
+            return saveFile(stream, Path.of(destination), objectName);
         } catch (IOException e) {
             e.printStackTrace();
             return HttpStatus.INTERNAL_SERVER_ERROR;

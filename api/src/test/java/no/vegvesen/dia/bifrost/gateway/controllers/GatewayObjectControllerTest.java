@@ -21,7 +21,7 @@ class GatewayObjectControllerTest extends S3ServiceTestdata {
     void shall_upload_multiple_files() throws Exception {
         s3GatewayController = new GatewayObjectController(s3ServiceLocalFilesystem);
         String target = "bob";
-        ResponseEntity<Object> response = s3GatewayController.uploadFile(target, new TestMulitpartFile[]{file1, file2});
+        ResponseEntity<Object> response = s3GatewayController.uploadFile(target, new TestMulitpartFile(PATH_TO_TESTFILE_1));
         assertEquals(200, response.getStatusCode().value());
 
         // cleanup
@@ -32,7 +32,7 @@ class GatewayObjectControllerTest extends S3ServiceTestdata {
     void shall_upload_file_and_replace_filename_when_file_name_is_provided() throws Exception {
         String target = "ken";
         s3GatewayController = new GatewayObjectController(s3ServiceLocalFilesystem);
-        ResponseEntity<Object> response = s3GatewayController.uploadFile(target, new TestMulitpartFile[]{file1});
+        ResponseEntity<Object> response = s3GatewayController.uploadFile(target, new TestMulitpartFile(PATH_TO_TESTFILE_2));
         assertEquals(200, response.getStatusCode().value());
     }
 

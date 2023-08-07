@@ -19,10 +19,10 @@ class S3ServiceUsingMinioTest extends S3ServiceTestdata {
     }
 
     //@Test
-    public void shall_upload_file() throws FileNotFoundException {
+    public void shall_upload_file() throws IOException {
         Config config = ConfigLoader.fromFile(new File(getClass().getClassLoader().getResource("test_config.yml").getFile()));
         S3ServiceUsingMinio s3ServiceUsingMinio = new S3ServiceUsingMinio(config);
-        HttpStatus httpStatus = s3ServiceUsingMinio.upload(bucketName, new TestMulitpartFile[]{file1, file2});
+        HttpStatus httpStatus = s3ServiceUsingMinio.publish(bucketName, new TestMulitpartFile(PATH_TO_TESTFILE_1));
         assertEquals(HttpStatus.OK, httpStatus);
     }
 

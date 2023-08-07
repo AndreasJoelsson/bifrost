@@ -38,7 +38,7 @@ public class S3ServiceLocalFilesystemTest {
         String content = "Test content";
         InputStream stream = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
 
-        HttpStatus status = s3Service.upload(BUCKET_NAME, OBJECT_NAME, MEDIA_TYPE, stream);
+        HttpStatus status = s3Service.publish(BUCKET_NAME, OBJECT_NAME, MEDIA_TYPE, stream);
         assertEquals(HttpStatus.OK, status, "Upload status should be OK");
 
         assertTrue(Files.exists(Path.of(BUCKET_NAME, OBJECT_NAME)), "File should exist after upload");
@@ -49,7 +49,7 @@ public class S3ServiceLocalFilesystemTest {
         String content = "Test content";
         MockMultipartFile file = new MockMultipartFile("data", OBJECT_NAME, MEDIA_TYPE, content.getBytes());
 
-        HttpStatus status = s3Service.upload(BUCKET_NAME, file);
+        HttpStatus status = s3Service.publish(BUCKET_NAME, file);
         assertEquals(HttpStatus.OK, status, "Upload status should be OK");
 
         assertTrue(Files.exists(Path.of(BUCKET_NAME, OBJECT_NAME)), "File should exist after upload");

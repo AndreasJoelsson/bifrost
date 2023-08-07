@@ -1,5 +1,6 @@
 package no.vegvesen.dia.bifrost.core.config;
 
+import no.vegvesen.dia.bifrost.core.services.S3ImplementationType;
 import no.vegvesen.dia.bifrost.core.target.ActionType;
 import no.vegvesen.dia.bifrost.core.target.TargetConfig;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,7 @@ class ConfigLoaderTest {
         assertEquals("ABCD1234", config.getS3Config().getAccessKey());
         assertEquals("1234ABCD", config.getS3Config().getSecretKey());
         assertEquals("www.google.se", config.getS3Config().getUrl());
+        assertEquals(S3ImplementationType.MINIO, config.getS3Config().getImplementation());
         assertEquals(2, config.getTargetConfigs().size());
         TargetConfig check = config.getTargetConfigs().get(0);
         assertEquals(ActionType.S3, check.getAction());

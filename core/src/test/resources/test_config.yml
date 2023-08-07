@@ -2,6 +2,7 @@ s3:
   accessKey: "ABCD1234"
   secretKey: "1234ABCD"
   url: "www.google.se"
+  implementation: "minio"
 targets:
   - target: test-1
     action: s3

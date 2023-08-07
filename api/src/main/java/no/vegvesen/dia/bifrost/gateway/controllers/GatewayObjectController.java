@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import no.vegvesen.dia.bifrost.core.services.S3Service;
+import no.vegvesen.dia.bifrost.core.services.DataPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +26,11 @@ import org.springframework.web.multipart.MultipartFile;
 public class GatewayObjectController {
     private static final Logger log = LoggerFactory.getLogger(GatewayObjectController.class);
 
-    private final S3Service s3Service;
+    private final DataPublisher dataPublisher;
 
     @Autowired
-    public GatewayObjectController(S3Service s3Service) {
-        this.s3Service = s3Service;
+    public GatewayObjectController(DataPublisher dataPublisher) {
+        this.dataPublisher = dataPublisher;
     }
 
     @PostMapping(
@@ -49,16 +49,14 @@ public class GatewayObjectController {
                             description = "request is missing vital information")
             })
     public ResponseEntity<Object> uploadFile(@Parameter(description = "Target for the service that should be used.", example = "vegbilder") @PathVariable String target,
-                                             @RequestPart("file") MultipartFile[] files) {
+                                             @RequestPart("file") MultipartFile file) {
 
-        log.info("uploading {} file(s) to target: {}", files.length, target);
-        for (MultipartFile file : files) {
-            log.info("File has attributes: {}", file.getOriginalFilename());
-            log.info("File has attributes: {}", file.getSize());
-            log.info("File has attributes: {}", file.getName());
-            log.info("File has attributes: {}", file.getResource());
-            log.info("File has attributes: {}", file.getContentType());
-        }
+        log.info("uploading {} file(s) to target: {}", file.getOriginalFilename(), target);
+        log.info("File has attributes: {}", file.getOriginalFilename());
+        log.info("File has attributes: {}", file.getSize());
+        log.info("File has attributes: {}", file.getName());
+        log.info("File has attributes: {}", file.getResource());
+        log.info("File has attributes: {}", file.getContentType());
         //HttpStatus httpStatus = s3Service.upload(bucket, path, files);
         //return ResponseEntity.status(httpStatus).build();
         return ResponseEntity.ok().build();
