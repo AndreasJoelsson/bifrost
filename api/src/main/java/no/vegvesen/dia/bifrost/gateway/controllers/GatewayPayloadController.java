@@ -28,10 +28,8 @@ import java.util.UUID;
                 description = "documentation on internal wiki",
                 url = "https://www.vegvesen.no/wiki/x/L9W6D"))
 public class GatewayPayloadController {
-    public static final String DESC_PATH_WITH_FILENAME = "path with filename";
-    public static final String EXAMPLE_MYPATH_SUBPATH_FILENAME_JPG = "/mypath/subpath/filename.jpg";
-    public static final String DESC_BUCKET_NAME = "bucket name";
-    public static final String EXAMPLE_MYBUCKET = "mybucket";
+    public static final String DESC_TARGET_NAME = "Target Name for config lookup.";
+    public static final String EXAMPLE_TARGET = "veibilder";
     private static final Logger log = LoggerFactory.getLogger(GatewayPayloadController.class);
     private final Context context;
 
@@ -55,7 +53,7 @@ public class GatewayPayloadController {
                             responseCode = "400",
                             description = "request is missing vital information")
             })
-    public ResponseEntity<Object> payloadAny(@Parameter(description = DESC_BUCKET_NAME, example = EXAMPLE_MYBUCKET) @PathVariable String target,
+    public ResponseEntity<Object> payloadAny(@Parameter(description = DESC_TARGET_NAME, example = EXAMPLE_TARGET) @PathVariable String target,
                                              @RequestBody JsonNode requestBody) {
         S3PayloadResponse response = new S3PayloadResponse();
         try ( response ) {
