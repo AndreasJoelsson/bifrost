@@ -43,6 +43,23 @@ public interface DataPublisher {
      * Publishes a single file to the specified destination (e.g., S3 bucket or Kafka topic).
      *
      * @param destination the name of the destination (e.g., S3 bucket name or Kafka topic name)
+     * @param objectName  the name of the object in the destination
+     * @param file        the file to be published
+     * @return the status of the publishing operation
+     */
+    default HttpStatus publish(String destination, String objectName, MultipartFile file) {
+        try {
+            return publish(destination, objectName, file.getContentType(), file.getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return HttpStatus.BAD_REQUEST;
+        }
+    }
+
+    /**
+     * Publishes a single file to the specified destination (e.g., S3 bucket or Kafka topic).
+     *
+     * @param destination the name of the destination (e.g., S3 bucket name or Kafka topic name)
      * @param file        the file to be published
      * @return the status of the publishing operation
      */

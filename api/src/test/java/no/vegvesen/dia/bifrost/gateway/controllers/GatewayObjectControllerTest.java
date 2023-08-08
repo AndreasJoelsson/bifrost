@@ -1,39 +1,60 @@
 package no.vegvesen.dia.bifrost.gateway.controllers;
 
-import no.vegvesen.dia.bifrost.core.services.S3ServiceLocalFilesystem;
+import no.vegvesen.dia.bifrost.contract.S3ObjectResponse;
+import no.vegvesen.dia.bifrost.core.Context;
+import no.vegvesen.dia.bifrost.core.services.PublishResponse;
+import no.vegvesen.dia.bifrost.core.target.ActionType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+class GatewayObjectControllerTest {
 
-class GatewayObjectControllerTest extends S3ServiceTestdata {
+    private Context context;
+    private GatewayObjectController controller;
 
-    private final S3ServiceLocalFilesystem s3ServiceLocalFilesystem = new S3ServiceLocalFilesystem();
-    private GatewayObjectController s3GatewayController;
-
-
-    GatewayObjectControllerTest() throws IOException {
+    @BeforeEach
+    void setUp() {
+        context = mock(Context.class);
+        controller = new GatewayObjectController(context);
     }
 
     @Test
-    void shall_upload_multiple_files() throws Exception {
-        s3GatewayController = new GatewayObjectController(s3ServiceLocalFilesystem);
-        String target = "bob";
-        ResponseEntity<Object> response = s3GatewayController.uploadFile(target, new TestMulitpartFile(PATH_TO_TESTFILE_1));
-        assertEquals(200, response.getStatusCode().value());
+    void uploadFile_Success() throws Exception {
+        String target = "vegbilder";
+        MultipartFile file = mock(MultipartFile.class);
+        PublishResponse publishResponse = new PublishResponse(HttpStatus.OK, ActionType.S3, "testBucket", "testPath", null);
 
-        // cleanup
-        S3ServiceLocalFilesystem.deleteAllEmptyFolders(bucketName + path);
+        when(context.publish(target, file)).thenReturn(publishResponse);
+        when(file.getOriginalFilename()).thenReturn("test.jpg");
+
+        ResponseEntity<Object> response = controller.uploadFile(target, file);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        S3ObjectResponse responseBody = (S3ObjectResponse) response.getBody();
+        assertEquals("testBucket", responseBody.getBucket());
+        assertEquals("testPath", responseBody.getFileName());
+        assertEquals("test.jpg", responseBody.getOriginalFilename());
     }
 
     @Test
-    void shall_upload_file_and_replace_filename_when_file_name_is_provided() throws Exception {
-        String target = "ken";
-        s3GatewayController = new GatewayObjectController(s3ServiceLocalFilesystem);
-        ResponseEntity<Object> response = s3GatewayController.uploadFile(target, new TestMulitpartFile(PATH_TO_TESTFILE_2));
-        assertEquals(200, response.getStatusCode().value());
+    void uploadFile_BadRequest() throws Exception {
+        String target = "vegbilder";
+        MultipartFile file = mock(MultipartFile.class);
+        PublishResponse publishResponse = new PublishResponse(HttpStatus.BAD_REQUEST, null, null, null, "Invalid request");
+
+        when(context.publish(target, file)).thenReturn(publishResponse);
+
+        ResponseEntity<Object> response = controller.uploadFile(target, file);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Invalid request", response.getBody());
     }
 
 }

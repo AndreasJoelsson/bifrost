@@ -2,6 +2,8 @@ package no.vegvesen.dia.bifrost.core;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import no.vegvesen.dia.bifrost.core.config.Config;
+import no.vegvesen.dia.bifrost.core.file.Extension;
+import no.vegvesen.dia.bifrost.core.file.Valid;
 import no.vegvesen.dia.bifrost.core.services.*;
 import no.vegvesen.dia.bifrost.core.target.TargetConfig;
 import no.vegvesen.dia.bifrost.core.target.TargetFactory;
@@ -11,7 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
+import java.net.http.HttpResponse;
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class YamlConfigContext implements Context {
@@ -40,10 +44,15 @@ public class YamlConfigContext implements Context {
     @Override
     public PublishResponse publish(String target, MultipartFile file) {
         TargetConfig targetConfig = this.targetFactory.create(target);
+        if (!Valid.validMultiPartFile(file)) {
+            return new PublishResponse(HttpStatus.NOT_IMPLEMENTED, null, null, null,
+                    "Invalid content type: " + file.getContentType() + "!");
+        }
         switch (Objects.requireNonNull(targetConfig.getAction())) {
             case S3 -> {
-                return new PublishResponse(this.s3publisher.publish(targetConfig.getName(), file),
-                        targetConfig.getAction(), targetConfig.getName(), file.getOriginalFilename(), "");
+                String fileName = UUID.randomUUID() + Extension.extension(file);
+                return new PublishResponse(this.s3publisher.publish(targetConfig.getName(), fileName, file),
+                        targetConfig.getAction(), targetConfig.getName(), fileName, "");
             }
             case KAFKA -> {
                 return new PublishResponse(HttpStatus.BAD_REQUEST, null, null, null,

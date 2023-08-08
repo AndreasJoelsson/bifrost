@@ -8,27 +8,18 @@ curl -vX 'POST' \
   "${API_URL}${TARGET}" \
   -H 'accept: */*' \
   -H 'Content-Type: multipart/form-data' \
-  --form 'file=@./src/test/resources/test_json.json'
+  --form 'file=@./src/test/resources/test_json.json;type=application/json'
 
 echo "uploading xml"
 curl -vX 'POST' \
   "${API_URL}${TARGET}" \
   -H 'accept: */*' \
   -H 'Content-Type: multipart/form-data' \
-  --form 'file=@./src/test/resources/test_xml.xml'
+  --form 'file=@./src/test/resources/test_xml.xml;type=application/xml'
 
 echo "uploading yaml"
 curl -vX 'POST' \
   "${API_URL}${TARGET}" \
   -H 'accept: */*' \
   -H 'Content-Type: multipart/form-data' \
-  --form 'file=@./src/test/resources/test_yaml.yml'
-
-echo "uploading multiple files"
-curl -vX 'POST' \
-  "${API_URL}${TARGET}" \
-  -H 'accept: */*' \
-  -H 'Content-Type: multipart/form-data' \
-  --form 'file=@./src/test/resources/test_json.json' \
-  --form 'file=@./src/test/resources/test_xml.xml' \
-  --form 'file=@./src/test/resources/test_yaml.yml'
+  --form 'file=@./src/test/resources/test_yaml.yml;type=application/yaml'
