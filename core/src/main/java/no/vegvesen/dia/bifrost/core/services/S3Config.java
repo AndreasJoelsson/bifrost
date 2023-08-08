@@ -2,7 +2,6 @@ package no.vegvesen.dia.bifrost.core.services;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import no.vegvesen.dia.bifrost.core.target.ActionType;
 
 public class S3Config {
 

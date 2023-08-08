@@ -54,4 +54,28 @@ public class S3ServiceLocalFilesystemTest {
 
         assertTrue(Files.exists(Path.of(BUCKET_NAME, OBJECT_NAME)), "File should exist after upload");
     }
+
+    @Test
+    public void testPublish() throws IOException {
+        String destination = "target/test-output";
+        String objectName = "testfile.txt";
+        String mediaType = "text/plain";
+        String content = "Hello World!";
+
+        InputStream stream = new ByteArrayInputStream(content.getBytes());
+
+        // Run the publish method
+        HttpStatus status = s3Service.publish(destination, objectName, mediaType, stream);
+
+        // Check if the file was created successfully
+        assertEquals(HttpStatus.OK, status);
+
+        Path path = Path.of(destination, objectName);
+        assertEquals(content, Files.readString(path));
+
+        // Cleanup after test
+        Files.deleteIfExists(path);
+        Files.deleteIfExists(Path.of(destination));
+    }
+
 }
