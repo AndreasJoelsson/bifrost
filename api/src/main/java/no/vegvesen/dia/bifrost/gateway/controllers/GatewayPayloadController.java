@@ -6,8 +6,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import no.vegvesen.dia.bifrost.contract.S3PayloadResponse;
+import no.vegvesen.dia.bifrost.contract.exception.InternalServerError;
 import no.vegvesen.dia.bifrost.core.Context;
-import no.vegvesen.dia.bifrost.core.services.DataPublisher;
+import no.vegvesen.dia.bifrost.core.services.PublishResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +42,8 @@ public class GatewayPayloadController {
 
     @PostMapping(
             value = "/payload/{target}",
-            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, "application/yaml"})
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, "application/yaml"},
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
             summary = "Write json/xml/yaml to the target path",
             description = "Store payload to s3.",
@@ -54,13 +57,32 @@ public class GatewayPayloadController {
             })
     public ResponseEntity<Object> payloadAny(@Parameter(description = DESC_BUCKET_NAME, example = EXAMPLE_MYBUCKET) @PathVariable String target,
                                              @RequestBody JsonNode requestBody) {
-        log.info("Upload json into target: {}", target);
-        log.info("Recived payload: {}", requestBody);
-        log.info("Publishin item returns: {}", context.publish(target, UUID.randomUUID().toString(), requestBody));
-
-        //HttpStatus httpStatus = s3Service.upload(bucket, path, files);
-        //return ResponseEntity.status(httpStatus).build();
-        return ResponseEntity.ok().build();
+        S3PayloadResponse response = new S3PayloadResponse();
+        try ( response ) {
+            log.info("Upload json into target: {}", target);
+            log.info("Received payload: {}", requestBody);
+            PublishResponse publishResponse = context.publish(target, UUID.randomUUID().toString() + ".json",
+                    requestBody);
+            switch (publishResponse.httpStatus()) {
+                case OK -> {
+                    response.setBucket(publishResponse.bucket());
+                    response.setFileName(publishResponse.path());
+                }
+                case BAD_REQUEST -> {
+                    return ResponseEntity.badRequest().body(publishResponse.message());
+                }
+                case INTERNAL_SERVER_ERROR -> {
+                    return ResponseEntity.internalServerError().body(publishResponse.message());
+                }
+                default -> {
+                    return ResponseEntity.internalServerError().body("Unknown status code: " + publishResponse.httpStatus());
+                }
+            }
+        } catch (Exception e) {
+            throw new InternalServerError(e.getMessage());
+        }
+        log.info("returning: " + response);
+        return ResponseEntity.ok(response);
     }
 
 }

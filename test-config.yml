@@ -4,6 +4,6 @@ s3:
   url: "https://s3-oslo.ostore.vegvesen.no"
   implementation: "local_file_system"
 targets:
-  target: "target"
-  action: "s3"
-  name: "test-bucket"
+  - target: "target"
+    action: "s3"
+    name: "test-bucket"

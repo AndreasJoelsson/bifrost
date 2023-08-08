@@ -2,10 +2,7 @@ package no.vegvesen.dia.bifrost.core;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import no.vegvesen.dia.bifrost.core.config.Config;
-import no.vegvesen.dia.bifrost.core.services.DataPublisher;
-import no.vegvesen.dia.bifrost.core.services.S3Config;
-import no.vegvesen.dia.bifrost.core.services.S3ServiceLocalFilesystem;
-import no.vegvesen.dia.bifrost.core.services.S3ServiceUsingMinio;
+import no.vegvesen.dia.bifrost.core.services.*;
 import no.vegvesen.dia.bifrost.core.target.TargetConfig;
 import no.vegvesen.dia.bifrost.core.target.TargetFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +24,8 @@ public class YamlConfigContext implements Context {
     public YamlConfigContext(Config config) {
         this.config = config;
         this.targetFactory = new TargetFactory(config);
-        S3Config s3Config = config.getS3Config();
-        switch (s3Config.getImplementation()) {
+        S3Config s3Config = Objects.requireNonNull(config.getS3Config());
+        switch (Objects.requireNonNull(s3Config.getImplementation())) {
             case MINIO -> this.s3publisher = new S3ServiceUsingMinio(config);
             case LOCAL_FILE_SYSTEM -> this.s3publisher = new S3ServiceLocalFilesystem();
             default -> throw new RuntimeException("No valid config provided for S3 Implementation.");
@@ -41,49 +38,58 @@ public class YamlConfigContext implements Context {
     }
 
     @Override
-    public HttpStatus publish(String target, MultipartFile file) {
+    public PublishResponse publish(String target, MultipartFile file) {
         TargetConfig targetConfig = this.targetFactory.create(target);
         switch (Objects.requireNonNull(targetConfig.getAction())) {
             case S3 -> {
-                return this.s3publisher.publish(targetConfig.getName(), file);
+                return new PublishResponse(this.s3publisher.publish(targetConfig.getName(), file),
+                        targetConfig.getAction(), targetConfig.getName(), file.getOriginalFilename(), "");
             }
             case KAFKA -> {
-                return HttpStatus.BAD_REQUEST;
+                return new PublishResponse(HttpStatus.BAD_REQUEST, null, null, null,
+                        "Kafka support not implemented yet.");
             }
             default -> {
-                return HttpStatus.INTERNAL_SERVER_ERROR;
+                return new PublishResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, null,
+                        "No implementation found for " + targetConfig.getAction().toString() + ".");
             }
         }
     }
 
     @Override
-    public HttpStatus publish(String target, String objectName, JsonNode node) {
+    public PublishResponse publish(String target, String objectName, JsonNode node) {
         TargetConfig targetConfig = this.targetFactory.create(target);
         switch (Objects.requireNonNull(targetConfig.getAction())) {
             case S3 -> {
-                return this.s3publisher.publish(targetConfig.getName(), objectName, node);
+                return new PublishResponse(this.s3publisher.publish(targetConfig.getName(), objectName, node),
+                        targetConfig.getAction(), targetConfig.getName(), objectName, "");
             }
             case KAFKA -> {
-                return HttpStatus.BAD_REQUEST;
+                return new PublishResponse(HttpStatus.BAD_REQUEST, null, null, null,
+                        "Kafka support not implemented yet.");
             }
             default -> {
-                return HttpStatus.INTERNAL_SERVER_ERROR;
+                return new PublishResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, null,
+                        "No implementation found for " + targetConfig.getAction().toString() + ".");
             }
         }
     }
 
     @Override
-    public HttpStatus publish(String target, String objectName, String mediaType, InputStream stream) {
+    public PublishResponse publish(String target, String objectName, String mediaType, InputStream stream) {
         TargetConfig targetConfig = this.targetFactory.create(target);
         switch (Objects.requireNonNull(targetConfig.getAction())) {
             case S3 -> {
-                return this.s3publisher.publish(targetConfig.getName(), objectName, mediaType, stream);
+                return new PublishResponse(this.s3publisher.publish(targetConfig.getName(), objectName, mediaType, stream),
+                        targetConfig.getAction(), targetConfig.getName(), objectName, "");
             }
             case KAFKA -> {
-                return HttpStatus.BAD_REQUEST;
+                return new PublishResponse(HttpStatus.BAD_REQUEST, null, null, null,
+                        "Kafka support not implemented yet.");
             }
             default -> {
-                return HttpStatus.INTERNAL_SERVER_ERROR;
+                return new PublishResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, null,
+                        "No implementation found for " + targetConfig.getAction().toString() + ".");
             }
         }
     }

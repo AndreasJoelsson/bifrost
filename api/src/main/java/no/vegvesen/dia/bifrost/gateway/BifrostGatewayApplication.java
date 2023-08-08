@@ -11,6 +11,7 @@ import java.util.Arrays;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {
+        "no.vegvesen.dia.bifrost.gateway.*",
         "no.vegvesen.dia.bifrost.core.config",
         "no.vegvesen.dia.bifrost.core"
 })
