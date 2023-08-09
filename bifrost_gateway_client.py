@@ -28,19 +28,19 @@ class BifrostGatewayClient:
         return None
 
     # Method to upload payload (JSON, XML, YAML) to a target path
-    def upload_payload(self, target, payload, content_type: SupportedContentType):
+    def upload_payload(self, target, payload, content_type: SupportedContentType) -> requests.Response:
         # Check if provided content type is supported
         assert content_type in vars(SupportedContentType).values(), "Unsupported content type!"
         url_path = f"/api/v1/payload/{target}"  # Endpoint path
         headers = {'Content-Type': content_type}  # Content-Type header
         response = self._request(requests.post, url_path, data=payload, headers=headers)  # Make POST request
-        return response.json()  # Return JSON response
+        return response
 
     # Method to upload a file to a target path
-    def upload_file(self, target, file_path, content_type: SupportedContentType):
+    def upload_file(self, target, file_path, content_type: SupportedContentType) -> requests.Response:
         # Check if provided content type is supported
         assert content_type in vars(SupportedContentType).values(), "Unsupported content type!"
         url_path = f"/api/v1/object/{target}"  # Endpoint path
         files = {'file': (file_path, open(file_path, 'rb'), content_type)}  # File to be uploaded
         response = self._request(requests.post, url_path, files=files)  # Make POST request
-        return response.json()  # Return JSON response
+        return response
