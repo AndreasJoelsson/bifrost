@@ -35,3 +35,7 @@ build/
 ### Python ###
 .venv/
 __pycache__
+
+### Test Specific ###
+test-bucket/
+
