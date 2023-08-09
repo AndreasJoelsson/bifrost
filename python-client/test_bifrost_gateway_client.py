@@ -40,7 +40,7 @@ class TestBifrostGatewayClient(unittest.TestCase):
     # Test for uploading file
     def test_upload_file(self):
         target = "target"
-        file_path = "api/src/test/resources/test_json.json"
+        file_path = "resources/test_json.json"
         content_type = SupportedContentType.JSON
         response = self.client.upload_file(target, file_path, content_type)
 
