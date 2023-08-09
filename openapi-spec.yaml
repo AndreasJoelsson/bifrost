@@ -1,0 +1,152 @@
+openapi: 3.0.0
+servers:
+  - description: Bifrost Gateway API
+    url: https://bifrost.saga.no/api/v1
+info:
+  description: API for batch push til rådatalager.
+  version: "1.0.0"
+  title: Bifrost Gateway API
+  contact:
+    email: andreas.joelsson@vegvesen.no
+  license:
+    name: MIT No Attribution
+    url: 'https://github.com/aws/mit-0'
+tags:
+  - name: bifrost
+    description: Batch push of files or payloads to store in raw storage for data platform.
+  - name: info
+    description: Offentlig tilgjengelig
+paths:
+  '/object/{target}':
+    post:
+      tags:
+        - multipartformupload
+      summary: Laste opp filer til api.
+      description: |
+        Last opp 1 til flere object til gitt target
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '200':
+          description: OK
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  '/payload/{target}':
+    post:
+      tags:
+        - json
+      summary: Laste opp filer til
+      description: |
+        Laste opp payload til target.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+              format: binary
+          application/xml:
+            schema:
+              type: string
+              format: binary
+          application/yaml:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '200':
+          description: OK
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+components:
+  schemas:
+    ErrorMessage:
+      type: object
+      properties:
+        status:
+          type: integer
+          description: The code of the exception thrown, 400 for Bad Request etc.
+          example: 500
+        code:
+          type: integer
+          description: |
+            The code that triggered the exception, so for Internal Error (500). there might be another code
+            that has triggered the exception.
+          example: 411
+        message:
+          type: string
+          description: |
+            Message to the end user for the error. This is where you inform the user of the error.
+          example: 'Ugyldig navngivning på bucket: localbucket. Se lenke før rekomendasjon.'
+        developerMessage:
+          type: string
+          description: |
+            Developer specific message, this can maintain details about the error and information to the
+            developer what he should look at, if any is needed for this specific information. Can be states
+            or other type of information that will help debugging the issue at hand.
+          example: 'Use of an invalid bucket name was performed, see link for recommendations.'
+        link:
+          type: string
+          description: |
+            Link to resources that can help with the issue at hand, if it is GCP documentation or internal
+            information that can help with the specified problem at hand.
+          example: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html'
+      required:
+        - status
+        - code
+        - message
+    InfoObject:
+      type: object
+      properties:
+        contentType:
+          type: string
+        deleteMarker:
+          type: boolean
+        etag:
+          type: string
+        lastModified:
+          type: string
+        size:
+          type: number
+        versionId:
+          type: string
+  responses:
+    Forbidden:
+      description: "Returned when the operation is forbidden give a number of reasons."
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+    BadRequest:
+      description: "Returned the request is missing vital information."
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+    NotFound:
+      description: "Returned when the requested resource does not exist."
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+    InternalError:
+      description: "Returned when an internal exception occurred."
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'

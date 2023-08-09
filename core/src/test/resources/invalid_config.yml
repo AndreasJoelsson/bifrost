@@ -1,0 +1,4 @@
+s3:
+  accessKeys: "ABCD1234"
+  secreKey: "1234ABCD"
+  s3url: "www.google.se"
