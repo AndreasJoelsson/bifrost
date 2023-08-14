@@ -28,7 +28,7 @@ import java.util.UUID;
  *
  * This class is marked as a REST controller, and is tagged for inclusion in generated OpenAPI documentation.
  *
- * @see <a href="https://www.vegvesen.no/wiki/x/L9W6D">Documentation on internal wiki</a>
+ * @see <a href="https://www.vegvesen.no/wiki/x/s4UfDg">Documentation on internal wiki</a>
  */
 @RestController
 @RequestMapping("/api/v1/object")
@@ -39,7 +39,7 @@ import java.util.UUID;
                 "linked documentation.",
         externalDocs = @ExternalDocumentation(
                 description = "Detailed documentation on internal wiki (Access required)",
-                url = "https://www.vegvesen.no/wiki/x/TBD"))
+                url = "https://www.vegvesen.no/wiki/x/s4UfDg"))
 public class GatewayObjectController {
     private static final Logger log = LoggerFactory.getLogger(GatewayObjectController.class);
 
@@ -100,6 +100,7 @@ public class GatewayObjectController {
         try ( response ) {
             log.info("Upload json into target: {}", target);
             log.info("Received file: {}", file);
+            log.info("Received file content type: {}", file.getContentType());
             PublishResponse publishResponse = context.publish(target, file);
             switch (publishResponse.httpStatus()) {
                 case OK -> {

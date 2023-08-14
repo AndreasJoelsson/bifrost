@@ -25,7 +25,7 @@ import java.util.UUID;
  *
  * <p>This class offers RESTful API operations and is mapped under the /api/v1
  * endpoint. Documentation and details of the API can be found on the internal wiki at
- * {@link "https://www.vegvesen.no/wiki/x/L9W6D"}.
+ * {@link "https://www.vegvesen.no/wiki/x/s4UfDg"}.
  */
 @RestController
 @RequestMapping("/api/v1/payload")
@@ -34,7 +34,7 @@ import java.util.UUID;
         description = "Controller for managing payloads, providing operations to store them to s3 or Kafka.",
         externalDocs = @ExternalDocumentation(
                 description = "For more information, refer to the internal documentation wiki.",
-                url = "https://www.vegvesen.no/wiki/x/TBD"))
+                url = "https://www.vegvesen.no/wiki/x/s4UfDg"))
 public class GatewayPayloadController {
     public static final String DESC_TARGET_NAME = "Target Name for config lookup.";
     public static final String EXAMPLE_TARGET = "veibilder";

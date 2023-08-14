@@ -41,6 +41,7 @@ class BifrostGatewayClient:
         # Check if provided content type is supported
         assert content_type in vars(SupportedContentType).values(), "Unsupported content type!"
         url_path = f"/api/v1/object/{target}"  # Endpoint path
-        files = {'file': (file_path, open(file_path, 'rb'), content_type)}  # File to be uploaded
-        response = self._request(requests.post, url_path, files=files)  # Make POST request
+        with open(file_path, 'rb') as file_content:
+            files = {'file': (file_path, file_content, content_type)}  # File to be uploaded
+            response = self._request(requests.post, url_path, files=files)  # Make POST request
         return response
