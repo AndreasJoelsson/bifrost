@@ -39,3 +39,6 @@ __pycache__
 ### Test Specific ###
 test-bucket/
 
+### Python ###
+venv/
+
