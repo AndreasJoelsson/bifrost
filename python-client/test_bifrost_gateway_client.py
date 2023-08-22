@@ -68,6 +68,8 @@ class TestBifrostGatewayClient(unittest.TestCase):
 
         with self.assertRaises(HTTPError) as context:
             response = self.client.upload_file(target, file_path, content_type)
+        
+        print(context.exception.response)
 
         self.assertEqual(context.exception.response.status_code, 400)
         self.assertEqual(context.exception.response.json()['detail'], "Failed to read request")
