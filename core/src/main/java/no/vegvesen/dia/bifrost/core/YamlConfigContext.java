@@ -61,7 +61,7 @@ public class YamlConfigContext implements Context {
                         "Could not verify file content towards content type: " + file.getContentType() + "!");
             }
         } catch (IOException e) {
-            log.error("IOException validating {}: {}", file, e);
+            log.error("IOException validating {}: {}", file, e.getMessage(), e);
             return new PublishResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, null, null,
                     e.getMessage());
         }

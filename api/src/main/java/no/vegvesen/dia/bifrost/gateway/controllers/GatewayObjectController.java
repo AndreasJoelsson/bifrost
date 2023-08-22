@@ -98,9 +98,10 @@ public class GatewayObjectController {
                                              @RequestPart("file") MultipartFile file) {
         S3ObjectResponse response = new S3ObjectResponse();
         try ( response ) {
-            log.info("Upload json into target: {}", target);
-            log.info("Received file: {}", file);
-            log.info("Received file content type: {}", file.getContentType());
+            log.info("Upload multipartfile into target: {}", target);
+            log.info("File Name: " + file.getOriginalFilename());
+            log.info("File Size: " + file.getSize() + " bytes");
+            log.info("Content Type: " + file.getContentType());
             PublishResponse publishResponse = context.publish(target, file);
             switch (publishResponse.httpStatus()) {
                 case OK -> {
@@ -109,13 +110,13 @@ public class GatewayObjectController {
                     response.setOriginalFilename(file.getOriginalFilename());
                 }
                 case BAD_REQUEST -> {
-                    return ResponseEntity.badRequest().body(publishResponse.message());
-                }
-                case INTERNAL_SERVER_ERROR -> {
-                    return ResponseEntity.internalServerError().body(publishResponse.message());
+                    log.info("Message:: {}", publishResponse.message());
+                    return publishResponse.toResponseEntity();
                 }
                 default -> {
-                    return ResponseEntity.internalServerError().body("Unknown status code: " + publishResponse.httpStatus());
+                    return ResponseEntity.internalServerError()
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .body("Unknown status code: " + publishResponse.httpStatus());
                 }
             }
         } catch (Exception e) {

@@ -54,7 +54,7 @@ public class FileVerifier {
      * @return true if the content is valid for the given MediaType; false otherwise.
      */
     public static boolean isValidContent(MediaType type, InputStream stream) {
-        return isValidContent(type.getType(), stream);
+        return isValidContent(type.toString(), stream);
     }
 
     /**

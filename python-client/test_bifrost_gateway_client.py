@@ -11,7 +11,8 @@ class TestBifrostGatewayClient(unittest.TestCase):
         # Setup the client with primary and fallback URLs
         primary_endpoint = os.getenv("PRIMARY_ENDPOINT", "http://localhost:8080")
         self.client = BifrostGatewayClient(primary_endpoint)
-    """
+
+
     @parameterized.expand([
             ('{"key": "value"}', SupportedContentType.JSON),
             ('<root><key>value</key></root>', SupportedContentType.XML),
@@ -60,19 +61,26 @@ class TestBifrostGatewayClient(unittest.TestCase):
 
         self.assertEqual(context.exception.response.status_code, 400)
         self.assertEqual(context.exception.response.json()['detail'], "Failed to read request")
-    """
-    def test_upload_file_with_wrong_content_type(self):
-        file_path = "resources/test_json.json"
-        content_type = SupportedContentType.XML
+
+
+    @parameterized.expand([
+            ("resources/test_json.json", SupportedContentType.YAML, "Could not verify file content towards content type: application/yaml!"),
+            ("resources/test_json.json", SupportedContentType.XML, "Could not verify file content towards content type: application/xml!"),
+            ("resources/test_yaml.yml", SupportedContentType.JSON, "Could not verify file content towards content type: application/json!"),
+            ("resources/test_yaml.yml", SupportedContentType.XML, "Could not verify file content towards content type: application/xml!"),
+            ("resources/test_xml.xml", SupportedContentType.JSON, "Could not verify file content towards content type: application/json!"),
+            ("resources/test_xml.xml", SupportedContentType.YAML, "Could not verify file content towards content type: application/yaml!"),
+        ])
+    def test_upload_file_with_wrong_content_type(self, file_path, content_type, error_message):
+        #file_path = "resources/test_json.json"
+        #content_type = SupportedContentType.XML
         target = "target"
 
         with self.assertRaises(HTTPError) as context:
             response = self.client.upload_file(target, file_path, content_type)
-        
-        print(context.exception.response)
 
         self.assertEqual(context.exception.response.status_code, 400)
-        self.assertEqual(context.exception.response.json()['detail'], "Failed to read request")
+        self.assertEqual(context.exception.response.json()['message'], error_message)
 
 
 

@@ -11,6 +11,7 @@ public class Valid {
             case "application/json":
             case "application/xml":
             case "application/yaml":
+            case "text/xml":
             {
                 return true;
             }

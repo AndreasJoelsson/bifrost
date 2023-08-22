@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Objects;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -54,7 +56,8 @@ class GatewayObjectControllerTest {
         ResponseEntity<Object> response = controller.uploadFile(target, file);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Invalid request", response.getBody());
+        PublishResponse publishResponseExpected = PublishResponse.fromJson((String)response.getBody());
+        assertEquals("Invalid request", publishResponseExpected.message());
     }
 
 }
